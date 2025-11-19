@@ -7,11 +7,11 @@ class Boid:
         self.Position = pos
         self.Velocity = vel
         self.PerRadius = 100
-        self.SepRadius = 30
+        self.SepRadius = 35
 
-        self.AlignmentStrength = 0.5
-        self.CohesionStrength = 0.4
-        self.SeparationStrength = 1.5
+        self.AlignmentStrength = 0.25
+        self.CohesionStrength = 0.1
+        self.SeparationStrength = 4.5
 
     def Update(self, dt):
         self.Position += self.Velocity * dt
@@ -56,8 +56,7 @@ class Boid:
     def Allignment(self, AvgVel):
         if AvgVel.length() == 0:
             return Vec2(0, 0)
-        NorAvgVel = AvgVel.normalize()
-        steering = (NorAvgVel - self.Velocity).normalize() * \
+        steering = (AvgVel - self.Velocity).normalize() * \
             self.AlignmentStrength
         return steering
 
@@ -76,7 +75,6 @@ class Boid:
 
     def Cohesion(self, AvgPos):
         direction = AvgPos - self.Position
-        direction = direction.normalize()
         CohesionForce = direction * self.CohesionStrength
         return CohesionForce
 
@@ -88,7 +86,8 @@ class Boid:
             diff = self.Position - neighbor.Position
             distance = diff.length()
             if distance < self.SepRadius and distance > 0:
-                contribution = diff.normalize() * (1 / distance)
+                strength = (self.SepRadius - distance) / self.SepRadius
+                contribution = diff.normalize() * strength
                 sumVec += contribution
 
         if sumVec.length() > 0:

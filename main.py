@@ -21,7 +21,7 @@ def main(position, screen):
     max_force = 50
 
     Boids = []
-    for i in range(40):
+    for i in range(300):
         vx = random.uniform(-50, 50)
         vy = random.uniform(-50, 50)
         velocity = Vec2(vx, vy)
@@ -38,9 +38,10 @@ def main(position, screen):
         screen.fill((0, 0, 0))  # clear screen
 
         # boid loop
-        for i, boid in enumerate(Boids):
+        for j,  boid in enumerate(Boids):
             neighbors = boid.GetNeighbors(Boids)
 
+            # Compute flocking rules
             AvgVel = boid.GetAverageVel(neighbors)
             AlignmentForce = boid.Allignment(AvgVel)
 
@@ -54,7 +55,6 @@ def main(position, screen):
             if steering.length() > max_force:
                 steering = steering.normalize() * max_force
 
-            print(f"steering length: {steering.length()}")
             boid.Velocity += steering
 
             if boid.Velocity.length() > max_speed:
@@ -64,21 +64,19 @@ def main(position, screen):
             boid.Wrap(HEIGHT, WIDTH)
             boid.Draw(screen)
 
-            if i == 0:
-                for neighbor in neighbors:
-                    pg.draw.circle(
-                        screen,
-                        (0, 100, 255),   #
-                        (int(boid.Position.x), int(boid.Position.y)),
-                        boid.PerRadius,
-                        1
-                    )
-                    pg.draw.line(
-                        screen,
-                        (0, 255, 0),  # green
-                        (int(boid.Position.x), int(boid.Position.y)),
-                        (int(neighbor.Position.x), int(neighbor.Position.y))
-                    )
+            # if j == 0:
+            #     for neighbor in neighbors:
+            #         pg.draw.circle(
+            #             screen,
+            #             boid.PerRadius,
+            #             1
+            #         )
+            #         pg.draw.line(
+            #             screen,
+            #             (0, 255, 0),  # green
+            #             (int(boid.Position.x), int(boid.Position.y)),
+            #             (int(neighbor.Position.x), int(neighbor.Position.y))
+            #         )
 
         pg.display.flip()
 
