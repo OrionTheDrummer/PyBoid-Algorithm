@@ -16,15 +16,18 @@ screen = pg.display.set_mode((WIDTH, HEIGHT))
 pg.display.flip()
 
 
-def main(position, screen):
+def main(screen):
     max_speed = 150
     max_force = 50
 
     Boids = []
-    for i in range(300):
+    for i in range(200):
         vx = random.uniform(-50, 50)
         vy = random.uniform(-50, 50)
         velocity = Vec2(vx, vy)
+        px = random.uniform(0, WIDTH)
+        py = random.uniform(0, HEIGHT)
+        position = Vec2(px, py)
         Boids.append(Boid(position, velocity))
 
     running = True
@@ -81,4 +84,4 @@ def main(position, screen):
         pg.display.flip()
 
 
-main(Position, screen)
+main(screen)
