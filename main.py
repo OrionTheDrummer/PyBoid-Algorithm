@@ -18,6 +18,8 @@ pg.display.flip()
 
 def main(position, screen):
     max_speed = 150
+    max_force = 50
+
     Boids = []
     for i in range(40):
         vx = random.uniform(-50, 50)
@@ -49,6 +51,10 @@ def main(position, screen):
 
             steering = AlignmentForce + CohesionForce + SeparationForce
 
+            if steering.length() > max_force:
+                steering = steering.normalize() * max_force
+
+            print(f"steering length: {steering.length()}")
             boid.Velocity += steering
 
             if boid.Velocity.length() > max_speed:
@@ -58,21 +64,21 @@ def main(position, screen):
             boid.Wrap(HEIGHT, WIDTH)
             boid.Draw(screen)
 
-            # if i == 0:
-            #    for neighbor in neighbors:
-            #        pg.draw.circle(
-            #            screen,
-            #            (0, 100, 255),   #
-            #            (int(boid.Position.x), int(boid.Position.y)),
-            #            boid.PerRadius,
-            #            1
-            #        )
-            #        pg.draw.line(
-            #            screen,
-            #            (0, 255, 0),  # green
-            #            (int(boid.Position.x), int(boid.Position.y)),
-            #            (int(neighbor.Position.x), int(neighbor.Position.y))
-            #        )
+            if i == 0:
+                for neighbor in neighbors:
+                    pg.draw.circle(
+                        screen,
+                        (0, 100, 255),   #
+                        (int(boid.Position.x), int(boid.Position.y)),
+                        boid.PerRadius,
+                        1
+                    )
+                    pg.draw.line(
+                        screen,
+                        (0, 255, 0),  # green
+                        (int(boid.Position.x), int(boid.Position.y)),
+                        (int(neighbor.Position.x), int(neighbor.Position.y))
+                    )
 
         pg.display.flip()
 
